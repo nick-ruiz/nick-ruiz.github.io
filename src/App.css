@@ -1,38 +1,86 @@
-.App {
-  text-align: center;
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.SplitPane {
+  width: 100%;
+  height: 100%;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.SplitPane-left {
+  float: left;
+  width: 75%;
+  height: 100%;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.SplitPane-right {
+  float: left;
+  width: 25%;
+  height: 100%;
+}
+
+.Panel {
+  width: 100%;
+  height: 100%;
   color: white;
+  background-color: black;
 }
 
-.App-link {
-  color: #61dafb;
+.Dashboard {
+  width: 100%;
+  height: 100%;
+  color: white;
+  background-color: black;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.info {
+  position: fixed;
+  background-color: rgb(105, 60, 0);
+  color: rgb(24, 17, 17);
+  height: 100%;
+  width: 25%;
+  right: 0;
+}
+
+.storypic {
+  height: 25%;
+  background-color: green;
+}
+
+.timer {
+  color: white;
+  font-weight: bold;
+  background-color: rgb(59, 59, 59);
+  height: 5%;
+  font-size: 36px;
+}
+
+.story {
+  color: white;
+  background-color: orange;
+  font-size: 30px;
+  margin: 1px;
+  border: 1px solid white;
+  list-style-type: none;
+}
+
+.selected {
+  color: black;
+  background-color: gold;
+  font-size: 30px;
+  margin: 1px;
+  border: 1px solid white;
+  list-style-type: none;
+}
+
+.faded {
+  color: white;
+  background-color: rgb(78, 43, 0);
+  font-size: 30px;
+  margin: 1px;
+  border: 1px solid white;
+  list-style-type: none;
 }
