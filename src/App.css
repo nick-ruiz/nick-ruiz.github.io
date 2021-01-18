@@ -5,6 +5,10 @@ body,
   height: 100%;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 .SplitPane {
   width: 100%;
   height: 100%;
@@ -22,14 +26,15 @@ body,
   height: 100%;
 }
 
-.Panel {
-  width: 100%;
-  height: 100%;
-  color: white;
-  background-color: black;
-}
+/* 
+*
+*
+PANEL CSS
+*
+*
+*/
 
-.Dashboard {
+.Panel {
   width: 100%;
   height: 100%;
   color: white;
@@ -38,7 +43,7 @@ body,
 
 .info {
   position: fixed;
-  background-color: rgb(105, 60, 0);
+  background-color: #2b2b2b;
   color: rgb(24, 17, 17);
   height: 100%;
   width: 25%;
@@ -47,7 +52,13 @@ body,
 
 .storypic {
   height: 25%;
-  background-color: green;
+  background-color: #9146ff;
+}
+
+.storypic img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
 }
 
 .timer {
@@ -58,29 +69,134 @@ body,
   font-size: 36px;
 }
 
-.story {
-  color: white;
-  background-color: orange;
+.story,
+.selected,
+.faded {
   font-size: 30px;
-  margin: 1px;
-  border: 1px solid white;
   list-style-type: none;
+}
+
+.story {
+  color: #fff7f0;
+  background-color: #c73226;
+  border: 1px solid #820d00;
 }
 
 .selected {
-  color: black;
-  background-color: gold;
-  font-size: 30px;
-  margin: 1px;
-  border: 1px solid white;
-  list-style-type: none;
+  color: #230802;
+  background-color: #c9ab3b;
+  border: 1px solid #820d00;
 }
 
 .faded {
-  color: white;
-  background-color: rgb(78, 43, 0);
-  font-size: 30px;
-  margin: 1px;
-  border: 1px solid white;
-  list-style-type: none;
+  color: #b3a5a3;
+  background-color: #600c05;
+  border: 1px solid #600c05;
 }
+
+/* 
+*
+*
+DASHBOARD CSS 
+*
+*
+*/
+
+.Dashboard {
+  width: 100%;
+  height: 100%;
+  color: #e0e0e0;
+  background-color: #353535;
+}
+
+.SubmitForm {
+  margin: auto;
+  width: 75%;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 20vh;
+}
+
+.title h1 {
+  font-size: 4em;
+  font-weight: 700;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 10px;
+  color: rgba(248, 248, 248, 0.705);
+  outline: black;
+  -webkit-text-stroke: 3px black;
+}
+
+.SubmitForm h2 {
+  font-family: Arial, Helvetica, sans-serif;
+  padding-top: 10px;
+  margin: 0;
+  font-weight: bold;
+}
+
+.start {
+  margin: auto;
+  width: 25%;
+  padding-top: 50px;
+}
+
+.add {
+  padding-top: 5px;
+}
+
+.Add {
+  /* remove default behavior */
+  appearance: none;
+  -webkit-appearance: none;
+  /* usual styles */
+  padding: 10px;
+  background-color: #131313;
+  border: 1px solid white;
+  color: #e0e0e0;
+  font-weight: 600;
+  border-radius: 5px;
+  width: 100%;
+}
+
+label {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 23px;
+}
+
+input[type="text"] {
+  border-radius: 10px;
+  padding: 10px;
+  border: 0;
+  width: 100%;
+}
+
+.Start,
+.Playing {
+  /* remove default behavior */
+  appearance: none;
+  -webkit-appearance: none;
+  /* usual styles */
+  padding: 10px;
+  border: none;
+  color: #2b2b2b;
+  font-weight: 600;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.Start {
+  background-color: #00ffea;
+}
+
+.Playing {
+  background-color: #a00000;
+}
+
+/* END DASHBOARD CSS */

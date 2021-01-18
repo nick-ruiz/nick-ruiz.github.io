@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import logo from "../resources/TwitchExtrudedWordmarkBlackOps.png";
 
 export class SplitPane extends Component {
   constructor(props) {
@@ -6,7 +7,7 @@ export class SplitPane extends Component {
     this.state = {
       ticking: false,
       stories: [],
-      current: { story: "story", time: 30 },
+      current: { story: "Headline", time: 30 },
       currentIndex: 0,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -64,57 +65,78 @@ export class SplitPane extends Component {
 
   render() {
     const items = [];
-    for (const [index, value] of this.state.stories.entries()) {
-      let diff = index - this.state.currentIndex;
-      if (index === this.state.currentIndex) {
-        items.push(
-          <li className="selected" key={index}>
-            {value.story}
-          </li>
-        );
-      } else if (diff < 0) {
-        items.push(
-          <li className="faded" key={index}>
-            {value.story}
-          </li>
-        );
-      } else {
-        items.push(
-          <li className="story" key={index}>
-            {value.story}
-          </li>
-        );
+    if (this.state.stories.length === 0) {
+      items.push(
+        <li key={0} className="selected">
+          ADD HEADLINES
+        </li>
+      );
+    } else {
+      for (const [index, value] of this.state.stories.entries()) {
+        let diff = index - this.state.currentIndex;
+        if (diff < -4) continue;
+        else if (index === this.state.currentIndex) {
+          items.push(
+            <li className="selected" key={index}>
+              {value.story}
+            </li>
+          );
+        } else if (diff < 0) {
+          items.push(
+            <li className="faded" key={index}>
+              {value.story}
+            </li>
+          );
+        } else {
+          items.push(
+            <li className="story" key={index}>
+              {value.story}
+            </li>
+          );
+        }
       }
     }
-
     return (
       <div className="SplitPane">
         <div className="SplitPane-left">
           <div className="Dashboard">
-            <form onSubmit={this.handleSubmit}>
-              <label>
-                Time (Seconds):
-                <input type="text" name="time"></input>
-              </label>
-              <br></br>
-              <label>
-                Story:
-                <input type="text" name="story"></input>
-              </label>
-              <br></br>
-              <input type="submit" value="Submit"></input>
-            </form>
-            <input
-              type="submit"
-              value={this.state.ticking ? "Pause" : "Start"}
-              onClick={this.handleStart}
-            ></input>
+            <div className="SubmitForm">
+              <div className="title">
+                <h1>PTI STYLE COUNTDOWN</h1>
+              </div>
+              <h2>Add Items</h2>
+              <form onSubmit={this.handleSubmit}>
+                <div className="in-box">
+                  <label>Time (Seconds)</label>
+                  <br />
+                  <input type="text" name="time"></input>
+                </div>
+                <div className="in-box">
+                  <label>Headline</label>
+                  <br />
+                  <input type="text" name="story"></input>
+                </div>
+                <div className="add">
+                  <input className="Add" type="submit" value="Submit"></input>
+                </div>
+              </form>
+              <div className="start">
+                <input
+                  className={this.state.ticking ? "Playing" : "Start"}
+                  type="submit"
+                  value={this.state.ticking ? "Pause" : "Start"}
+                  onClick={this.handleStart}
+                ></input>
+              </div>
+            </div>
           </div>
         </div>
         <div className="SplitPane-right">
           <div className="Panel">
             <div className="info">
-              <div className="storypic"></div>
+              <div className="storypic">
+                <img alt="" src={logo}></img>
+              </div>
               <div className="timer">
                 {this.convertSeconds(this.state.current.time)}
               </div>
