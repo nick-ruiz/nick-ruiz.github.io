@@ -52,13 +52,13 @@ PANEL CSS
 
 .storypic {
   height: 25%;
-  background-color: #9146ff;
+  background-color: #2b2b2b;
 }
 
 .storypic img {
   height: 100%;
   width: 100%;
-  object-fit: contain;
+  object-fit: fill;
 }
 
 .timer {
@@ -167,7 +167,7 @@ DASHBOARD CSS
 
 label {
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 23px;
+  font-size: 12px;
 }
 
 input[type="text"] {
@@ -197,6 +197,11 @@ input[type="text"] {
 
 .Playing {
   background-color: #a00000;
+}
+
+.file {
+  margin: 0px 0px 5px 0px;
+  width: 100%;
 }
 
 /* END DASHBOARD CSS */

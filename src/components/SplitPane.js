@@ -9,9 +9,11 @@ export class SplitPane extends Component {
       stories: [],
       current: { story: "Headline", time: 30 },
       currentIndex: 0,
+      file: null,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleStart = this.handleStart.bind(this);
+    this.handleImage = this.handleImage.bind(this);
   }
 
   componentWillUnmount() {
@@ -25,6 +27,7 @@ export class SplitPane extends Component {
       this.setState({
         current: {
           time: this.state.current.time - 1,
+          file: this.state.current.file,
         },
       });
     }
@@ -52,12 +55,31 @@ export class SplitPane extends Component {
     this.setState({ ticking: !this.state.ticking });
   }
 
+  handleImage(e) {
+    e.preventDefault();
+    if (e.target.files[0]) {
+      this.setState({
+        file: URL.createObjectURL(e.target.files[0]),
+      });
+    } else {
+      this.setState({
+        file: logo,
+      });
+    }
+  }
+
   handleSubmit(e) {
     e.preventDefault();
     let x = e.target.story.value;
     let y = e.target.time.value;
     this.setState((state) => {
-      const stories = [...state.stories, { story: x, time: y }];
+      const stories = [
+        ...state.stories,
+        { story: x, time: y, file: this.state.file },
+      ];
+      e.target.story.value = "";
+      e.target.file.value = null;
+      console.log(e.target.file.value);
       const current = stories[0];
       return { stories, current };
     });
@@ -69,6 +91,15 @@ export class SplitPane extends Component {
       items.push(
         <li key={0} className="selected">
           ADD HEADLINES
+        </li>
+      );
+    } else if (
+      this.state.stories.length > 0 &&
+      this.state.currentIndex > this.state.stories.length - 1
+    ) {
+      items.push(
+        <li key={0} className="selected">
+          FINISHED
         </li>
       );
     } else {
@@ -104,7 +135,7 @@ export class SplitPane extends Component {
               <div className="title">
                 <h1>PTI STYLE COUNTDOWN</h1>
               </div>
-              <h2>Add Items</h2>
+              <h2>Add Headlines</h2>
               <form onSubmit={this.handleSubmit}>
                 <div className="in-box">
                   <label>Time (Seconds)</label>
@@ -116,6 +147,15 @@ export class SplitPane extends Component {
                   <br />
                   <input type="text" name="story"></input>
                 </div>
+                <div className="file">
+                  <label>Add image</label>
+                  <br />
+                  <input
+                    onChange={this.handleImage}
+                    type="file"
+                    name="file"
+                  ></input>
+                </div>
                 <div className="add">
                   <input className="Add" type="submit" value="Submit"></input>
                 </div>
@@ -124,7 +164,7 @@ export class SplitPane extends Component {
                 <input
                   className={this.state.ticking ? "Playing" : "Start"}
                   type="submit"
-                  value={this.state.ticking ? "Pause" : "Start"}
+                  value={this.state.ticking ? "Pause" : "Start Countdown"}
                   onClick={this.handleStart}
                 ></input>
               </div>
@@ -135,7 +175,10 @@ export class SplitPane extends Component {
           <div className="Panel">
             <div className="info">
               <div className="storypic">
-                <img alt="" src={logo}></img>
+                <img
+                  alt=""
+                  src={this.state.current.file ? this.state.current.file : logo}
+                ></img>
               </div>
               <div className="timer">
                 {this.convertSeconds(this.state.current.time)}
