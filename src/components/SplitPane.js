@@ -107,8 +107,7 @@ export class SplitPane extends Component {
     } else {
       for (const [index, value] of this.state.stories.entries()) {
         let diff = index - this.state.currentIndex;
-        if (diff < -4) continue;
-        else if (index === this.state.currentIndex) {
+        if (index === this.state.currentIndex) {
           items.push(
             <li className="selected" key={index}>
               {value.story}
