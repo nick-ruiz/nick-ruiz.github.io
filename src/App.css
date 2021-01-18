@@ -111,7 +111,7 @@ DASHBOARD CSS
 
 .SubmitForm {
   margin: auto;
-  width: 75%;
+  width: 55%;
 }
 
 .title {
@@ -141,21 +141,13 @@ DASHBOARD CSS
   font-weight: bold;
 }
 
-.start {
-  margin: auto;
-  width: 25%;
-  padding-top: 50px;
-}
-
 .add {
   padding-top: 5px;
 }
 
 .Add {
-  /* remove default behavior */
   appearance: none;
   -webkit-appearance: none;
-  /* usual styles */
   padding: 10px;
   background-color: #131313;
   border: 1px solid white;
@@ -177,26 +169,44 @@ input[type="text"] {
   width: 100%;
 }
 
-.Start,
-.Playing {
-  /* remove default behavior */
+.options {
+  margin: auto;
+  width: 50%;
+  padding-top: 50px;
+}
+
+.options input[type="submit"] {
   appearance: none;
   -webkit-appearance: none;
-  /* usual styles */
+  margin: 5px;
   padding: 10px;
   border: none;
   color: #2b2b2b;
   font-weight: 600;
   border-radius: 5px;
-  width: 100%;
+  text-align: center;
+  font-size: 0.8rem;
+  width: 31%;
+}
+
+.options input[disabled] {
+  opacity: 0.2;
 }
 
 .Start {
-  background-color: #00ffea;
+  background-color: #00ff22;
 }
 
 .Playing {
   background-color: #a00000;
+}
+
+.Reset {
+  background-color: #ffdb3b;
+}
+
+.Clear {
+  background-color: #ffdb3b;
 }
 
 .file {

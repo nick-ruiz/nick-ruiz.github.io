@@ -14,6 +14,8 @@ export class SplitPane extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleStart = this.handleStart.bind(this);
     this.handleImage = this.handleImage.bind(this);
+    this.handleClear = this.handleClear.bind(this);
+    this.handleReset = this.handleReset.bind(this);
   }
 
   componentWillUnmount() {
@@ -90,6 +92,31 @@ export class SplitPane extends Component {
     });
   }
 
+  handleReset(e) {
+    e.preventDefault();
+    this.setState((state) => {
+      const ticking = false;
+      const stories = [...state.stories];
+      let current = { story: "Headline", time: 30 };
+      if (stories.length > 0) {
+        current = { story: stories[0].story, time: stories[0].time };
+      }
+      const currentIndex = 0;
+      return { ticking, stories, current, currentIndex };
+    });
+  }
+
+  handleClear(e) {
+    e.preventDefault();
+    this.setState({
+      ticking: false,
+      stories: [],
+      current: { story: "Headline", time: 30 },
+      currentIndex: 0,
+      file: null,
+    });
+  }
+
   render() {
     const items = [];
     if (this.state.stories.length === 0) {
@@ -132,10 +159,10 @@ export class SplitPane extends Component {
       <div className="SplitPane">
         <div className="SplitPane-left">
           <div className="Dashboard">
+            <div className="title">
+              <h1>PTI STYLE COUNTDOWN</h1>
+            </div>
             <div className="SubmitForm">
-              <div className="title">
-                <h1>PTI STYLE COUNTDOWN</h1>
-              </div>
               <h2>Add Headlines</h2>
               <form onSubmit={this.handleSubmit}>
                 <div className="in-box">
@@ -161,14 +188,29 @@ export class SplitPane extends Component {
                   <input className="Add" type="submit" value="Submit"></input>
                 </div>
               </form>
-              <div className="start">
-                <input
-                  className={this.state.ticking ? "Playing" : "Start"}
-                  type="submit"
-                  value={this.state.ticking ? "Pause" : "Start Countdown"}
-                  onClick={this.handleStart}
-                ></input>
-              </div>
+            </div>
+            <div className="options">
+              <input
+                className={this.state.ticking ? "Playing" : "Start"}
+                type="submit"
+                value={this.state.ticking ? "Pause" : "Start Countdown"}
+                onClick={this.handleStart}
+                disabled={this.state.stories.length > 0 ? false : true}
+              ></input>
+              <input
+                className="Reset"
+                type="submit"
+                value="Start At Beginning"
+                onClick={this.handleReset}
+                disabled={this.state.currentIndex === 0 ? true : false}
+              ></input>
+              <input
+                disabled={this.state.stories.length > 0 ? false : true}
+                className="Clear"
+                type="submit"
+                value="Clear All"
+                onClick={this.handleClear}
+              ></input>
             </div>
           </div>
         </div>
