@@ -37,6 +37,12 @@ export class SplitPane extends Component {
     let index = this.state.currentIndex + 1;
     if (index > this.state.stories.length - 1) {
       clearInterval(this.timerID);
+      this.setState({
+        current: {
+          time: this.state.current.time - 1,
+          file: this.state.current.file,
+        },
+      });
     } else {
       this.setState({
         currentIndex: index,
@@ -79,7 +85,6 @@ export class SplitPane extends Component {
       ];
       e.target.story.value = "";
       e.target.file.value = null;
-      console.log(e.target.file.value);
       const current = stories[0];
       return { stories, current };
     });
@@ -93,10 +98,7 @@ export class SplitPane extends Component {
           ADD HEADLINES
         </li>
       );
-    } else if (
-      this.state.stories.length > 0 &&
-      this.state.currentIndex > this.state.stories.length - 1
-    ) {
+    } else if (this.state.current.time < 0) {
       items.push(
         <li key={0} className="selected">
           FINISHED
@@ -181,7 +183,9 @@ export class SplitPane extends Component {
                 ></img>
               </div>
               <div className="timer">
-                {this.convertSeconds(this.state.current.time)}
+                {this.state.current.time < 0
+                  ? this.convertSeconds(0)
+                  : this.convertSeconds(this.state.current.time)}
               </div>
               <div>{items}</div>
             </div>
