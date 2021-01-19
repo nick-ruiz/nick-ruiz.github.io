@@ -10,6 +10,7 @@ export class SplitPane extends Component {
       current: { story: "Headline", time: 30 },
       currentIndex: 0,
       file: null,
+      errors: { isEmpty: false, isNan: false },
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleStart = this.handleStart.bind(this);
@@ -44,6 +45,8 @@ export class SplitPane extends Component {
           time: this.state.current.time - 1,
           file: this.state.current.file,
         },
+        ticking: false,
+        currentIndex: index,
       });
     } else {
       this.setState({
@@ -80,16 +83,27 @@ export class SplitPane extends Component {
     e.preventDefault();
     let x = e.target.story.value;
     let y = e.target.time.value;
-    this.setState((state) => {
-      const stories = [
-        ...state.stories,
-        { story: x, time: y, file: this.state.file },
-      ];
-      e.target.story.value = "";
-      e.target.file.value = null;
-      const current = stories[0];
-      return { stories, current };
-    });
+    if (Number.isInteger(y - 0) && x !== "") {
+      this.setState((state) => {
+        const stories = [
+          ...state.stories,
+          { story: x, time: y, file: this.state.file },
+        ];
+        e.target.story.value = "";
+        e.target.file.value = null;
+        const current = stories[0];
+        return { stories, current, errors: { isNan: false, isEmpty: false } };
+      });
+    } else {
+      if (x === "") {
+        this.setState(() => {
+          const isNan = Number.isInteger(y - 0);
+          const isEmpty = x === "";
+          const errors = { isNan: isNan, isEmpty: isEmpty };
+          return { errors };
+        });
+      }
+    }
   }
 
   handleReset(e) {
@@ -168,11 +182,21 @@ export class SplitPane extends Component {
                 <div className="in-box">
                   <label>Time (Seconds)</label>
                   <br />
+                  {this.state.errors.isNan ? (
+                    <span className="error">Must be a number</span>
+                  ) : (
+                    <></>
+                  )}
                   <input type="text" name="time"></input>
                 </div>
                 <div className="in-box">
                   <label>Headline</label>
                   <br />
+                  {this.state.errors.isEmpty ? (
+                    <span className="error">Can't be empty</span>
+                  ) : (
+                    <></>
+                  )}
                   <input type="text" name="story"></input>
                 </div>
                 <div className="file">
@@ -182,6 +206,7 @@ export class SplitPane extends Component {
                     onChange={this.handleImage}
                     type="file"
                     name="file"
+                    accept="image/*"
                   ></input>
                 </div>
                 <div className="add">
@@ -195,17 +220,20 @@ export class SplitPane extends Component {
                 type="submit"
                 value={this.state.ticking ? "Pause" : "Start Countdown"}
                 onClick={this.handleStart}
-                disabled={this.state.stories.length > 0 ? false : true}
+                disabled={
+                  this.state.stories.length <= 0 ||
+                  this.state.currentIndex > this.state.stories.length - 1
+                }
               ></input>
               <input
                 className="Reset"
                 type="submit"
                 value="Start At Beginning"
                 onClick={this.handleReset}
-                disabled={this.state.currentIndex === 0 ? true : false}
+                disabled={this.state.currentIndex === 0}
               ></input>
               <input
-                disabled={this.state.stories.length > 0 ? false : true}
+                disabled={this.state.stories.length <= 0}
                 className="Clear"
                 type="submit"
                 value="Clear All"

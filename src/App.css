@@ -186,7 +186,7 @@ input[type="text"] {
   border-radius: 5px;
   text-align: center;
   font-size: 0.8rem;
-  width: 31%;
+  width: 31.9%;
 }
 
 .options input[disabled] {
@@ -212,6 +212,11 @@ input[type="text"] {
 .file {
   margin: 0px 0px 5px 0px;
   width: 100%;
+}
+
+.error {
+  font-size: 0.8rem;
+  color: red;
 }
 
 /* END DASHBOARD CSS */
