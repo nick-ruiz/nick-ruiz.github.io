@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import logo from "../resources/TwitchExtrudedWordmarkBlackOps.png";
+import bell from "../resources/bell.mp3";
 
 export class SplitPane extends Component {
   constructor(props) {
@@ -12,6 +13,7 @@ export class SplitPane extends Component {
       file: null,
       errors: { isEmpty: false, isNan: false },
     };
+    this.bell = new Audio(bell);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleStart = this.handleStart.bind(this);
     this.handleImage = this.handleImage.bind(this);
@@ -37,6 +39,7 @@ export class SplitPane extends Component {
   }
 
   handlePop() {
+    this.bell.play();
     let index = this.state.currentIndex + 1;
     if (index > this.state.stories.length - 1) {
       clearInterval(this.timerID);
@@ -58,12 +61,12 @@ export class SplitPane extends Component {
 
   handleStart(e) {
     e.preventDefault();
-    if (!this.state.ticking) {
+    if (!this.state.ticking)
       this.timerID = setInterval(() => this.tick(), 1000);
-    } else {
-      clearInterval(this.timerID);
-    }
-    this.setState({ ticking: !this.state.ticking });
+    this.setState((state) => {
+      const ticking = !state.ticking;
+      return { ticking };
+    });
   }
 
   handleImage(e) {
@@ -95,14 +98,12 @@ export class SplitPane extends Component {
         return { stories, current, errors: { isNan: false, isEmpty: false } };
       });
     } else {
-      if (x === "") {
-        this.setState(() => {
-          const isNan = Number.isInteger(y - 0);
-          const isEmpty = x === "";
-          const errors = { isNan: isNan, isEmpty: isEmpty };
-          return { errors };
-        });
-      }
+      this.setState(() => {
+        const isNan = !Number.isInteger(y - 0);
+        const isEmpty = x === "";
+        const errors = { isNan: isNan, isEmpty: isEmpty };
+        return { errors };
+      });
     }
   }
 
