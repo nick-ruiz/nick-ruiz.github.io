@@ -62,16 +62,71 @@ PANEL CSS
 }
 
 .timer {
+  position: relative;
+  height: 5%;
+  background-color: rgb(59, 59, 59);
+}
+
+.clock {
   color: white;
   font-weight: bold;
-  background-color: rgb(59, 59, 59);
-  height: 5%;
   font-size: 2rem;
+  right: 0;
+  width: 50%;
+  height: 100%;
+}
+
+.edit-buttons {
+  background-color: rgb(247, 205, 129);
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: 50%;
+}
+
+.button-wrap input[type="image"] {
+  width: 25%;
+  height: 100%;
+  padding: 3px;
+  border: 3px solid white;
+  border-radius: 50%;
+  background-color: snow;
+}
+
+.button-wrap {
+  margin: auto;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.remove {
+  left: 0;
+  width: 50%;
+  height: 90%;
+  position: absolute;
+  text-align: center;
+  margin: 3px;
+}
+
+.move {
+  right: 0;
+  width: 50%;
+  height: 90%;
+  position: absolute;
+  text-align: center;
+  margin: 3px;
+}
+
+.move input {
+  margin-left: 5px;
 }
 
 .story,
 .selected,
-.faded {
+.faded,
+.editable {
   font-size: 30px;
   list-style-type: none;
 }
@@ -92,6 +147,17 @@ PANEL CSS
   color: #b3a5a3;
   background-color: #600c05;
   border: 1px solid #600c05;
+}
+
+.editable {
+  color: limegreen;
+  background-color: wheat;
+  border: 1px solid #ffffff;
+}
+
+.seledit {
+  color: powderblue;
+  background-color: purple;
 }
 
 /* 
@@ -155,6 +221,7 @@ DASHBOARD CSS
   font-weight: 600;
   border-radius: 5px;
   width: 100%;
+  cursor: pointer;
 }
 
 label {
@@ -186,6 +253,7 @@ input[type="text"] {
   text-align: center;
   font-size: 0.8rem;
   width: 31.9%;
+  cursor: pointer;
 }
 
 .options input[disabled] {
@@ -223,3 +291,16 @@ input[type="text"] {
 }
 
 /* END DASHBOARD CSS */
+
+.clickable {
+  cursor: pointer;
+}
+
+input[type="submit"]:disabled {
+  cursor: default;
+}
+
+input[type="image"]:disabled {
+  opacity: 0.5;
+  cursor: default;
+}

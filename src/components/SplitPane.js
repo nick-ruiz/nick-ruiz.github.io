@@ -1,6 +1,10 @@
 import React, { Component } from "react";
+import { v4 } from "uuid";
 import logo from "../resources/TwitchExtrudedWordmarkBlackOps.png";
 import bell from "../resources/bell.mp3";
+import up from "../resources/up_arrow.png";
+import down from "../resources/down_arrow.png";
+import remove from "../resources/remove.png";
 
 export class SplitPane extends Component {
   constructor(props) {
@@ -12,6 +16,7 @@ export class SplitPane extends Component {
       currentIndex: 0,
       file: null,
       errors: { isEmpty: false, isNan: false },
+      editable: false,
     };
     this.bell = new Audio(bell);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -19,6 +24,11 @@ export class SplitPane extends Component {
     this.handleImage = this.handleImage.bind(this);
     this.handleClear = this.handleClear.bind(this);
     this.handleReset = this.handleReset.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
+    this.handleUp = this.handleUp.bind(this);
+    this.handleDown = this.handleDown.bind(this);
+    this.handleRemove = this.handleRemove.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
   }
 
   componentWillUnmount() {
@@ -90,7 +100,7 @@ export class SplitPane extends Component {
       this.setState((state) => {
         const stories = [
           ...state.stories,
-          { story: x, time: y, file: this.state.file },
+          { story: x, time: y, file: this.state.file, id: v4() },
         ];
         e.target.story.value = "";
         e.target.file.value = null;
@@ -114,7 +124,11 @@ export class SplitPane extends Component {
       const stories = [...state.stories];
       let current = { story: "Headline", time: 30 };
       if (stories.length > 0) {
-        current = { story: stories[0].story, time: stories[0].time };
+        current = {
+          story: stories[0].story,
+          time: stories[0].time,
+          id: stories[0].id,
+        };
       }
       const currentIndex = 0;
       return { ticking, stories, current, currentIndex };
@@ -129,7 +143,62 @@ export class SplitPane extends Component {
       current: { story: "Headline", time: 30 },
       currentIndex: 0,
       file: null,
+      editable: false,
     });
+  }
+
+  handleUp(e) {
+    e.preventDefault();
+    if (this.state.currentIndex === 0) return;
+    this.setState((state) => {
+      const stories = [...state.stories];
+      const temp = stories[state.currentIndex];
+      const currentIndex = state.currentIndex;
+      stories[currentIndex] = stories[currentIndex - 1];
+      stories[currentIndex - 1] = temp;
+      return { stories, currentIndex: currentIndex - 1 };
+    });
+  }
+
+  handleDown(e) {
+    e.preventDefault();
+    if (this.state.currentIndex >= this.state.stories.length - 1) return;
+    this.setState((state) => {
+      const stories = [...state.stories];
+      const temp = stories[state.currentIndex];
+      const currentIndex = state.currentIndex;
+      stories[currentIndex] = stories[currentIndex + 1];
+      stories[currentIndex + 1] = temp;
+      return { stories, currentIndex: currentIndex + 1 };
+    });
+  }
+
+  handleRemove(e) {
+    e.preventDefault();
+    this.setState((state) => {
+      const stories = [...state.stories];
+      stories.splice(state.currentIndex, 1);
+      return {
+        stories,
+        currentIndex: state.currentIndex > 0 ? state.currentIndex - 1 : 0,
+        current:
+          stories.length > 0 ? stories[0] : { story: "Headline", time: 30 },
+        editable: stories.length > 0,
+      };
+    });
+  }
+
+  handleEdit(e) {
+    e.preventDefault();
+    this.setState({
+      editable: !this.state.editable,
+      currentIndex: this.state.editable ? 0 : this.state.currentIndex,
+    });
+  }
+
+  handleSelect(index, e) {
+    e.preventDefault();
+    this.setState({ currentIndex: index });
   }
 
   render() {
@@ -140,6 +209,23 @@ export class SplitPane extends Component {
           ADD HEADLINES
         </li>
       );
+    } else if (this.state.editable) {
+      let className = "editable clickable";
+      for (const [index, value] of this.state.stories.entries()) {
+        items.push(
+          <li
+            className={
+              index === this.state.currentIndex
+                ? className + " seledit"
+                : className
+            }
+            key={value.id}
+            onClick={(e) => this.handleSelect(index, e)}
+          >
+            {value.story}
+          </li>
+        );
+      }
     } else if (this.state.current.time < 0) {
       items.push(
         <li key={0} className="selected">
@@ -151,19 +237,19 @@ export class SplitPane extends Component {
         let diff = index - this.state.currentIndex;
         if (index === this.state.currentIndex) {
           items.push(
-            <li className="selected" key={index}>
+            <li className="selected" key={value.id}>
               {value.story}
             </li>
           );
         } else if (diff < 0) {
           items.push(
-            <li className="faded" key={index}>
+            <li className="faded" key={value.id}>
               {value.story}
             </li>
           );
         } else {
           items.push(
-            <li className="story" key={index}>
+            <li className="story" key={value.id}>
               {value.story}
             </li>
           );
@@ -223,7 +309,8 @@ export class SplitPane extends Component {
                 onClick={this.handleStart}
                 disabled={
                   this.state.stories.length <= 0 ||
-                  this.state.currentIndex > this.state.stories.length - 1
+                  this.state.currentIndex > this.state.stories.length - 1 ||
+                  this.state.editable
                 }
               ></input>
               <input
@@ -231,7 +318,7 @@ export class SplitPane extends Component {
                 type="submit"
                 value="Start At Beginning"
                 onClick={this.handleReset}
-                disabled={this.state.currentIndex === 0}
+                disabled={this.state.currentIndex === 0 || this.state.editable}
               ></input>
               <input
                 disabled={this.state.stories.length <= 0}
@@ -239,6 +326,13 @@ export class SplitPane extends Component {
                 type="submit"
                 value="Clear All"
                 onClick={this.handleClear}
+              ></input>
+              <input
+                disabled={this.state.stories.length <= 0}
+                className="Edit"
+                type="submit"
+                value={this.state.editable ? "Save" : "Edit Order"}
+                onClick={this.handleEdit}
               ></input>
             </div>
           </div>
@@ -253,9 +347,22 @@ export class SplitPane extends Component {
                 ></img>
               </div>
               <div className="timer">
-                {this.state.current.time < 0
-                  ? this.convertSeconds(0)
-                  : this.convertSeconds(this.state.current.time)}
+                <div className="clock">
+                  {this.state.current.time < 0
+                    ? this.convertSeconds(0)
+                    : this.convertSeconds(this.state.current.time)}
+                </div>
+                {this.state.editable ? (
+                  <EditDiv
+                    handleUp={this.handleUp}
+                    handleDown={this.handleDown}
+                    handleRemove={this.handleRemove}
+                    currentIndex={this.state.currentIndex}
+                    storyLen={this.state.stories.length}
+                  ></EditDiv>
+                ) : (
+                  <></>
+                )}
               </div>
               <div>{items}</div>
             </div>
@@ -275,6 +382,39 @@ export class SplitPane extends Component {
       seconds.toString().padStart(2, "0");
     return timeString;
   }
+}
+
+function EditDiv(props) {
+  return (
+    <div className="edit-buttons">
+      <div className="button-wrap">
+        <div className="remove">
+          <input
+            type="image"
+            src={remove}
+            alt=""
+            onClick={props.handleRemove}
+          ></input>
+        </div>
+        <div className="move">
+          <input
+            type="image"
+            src={up}
+            alt=""
+            onClick={props.handleUp}
+            disabled={props.currentIndex === 0}
+          ></input>
+          <input
+            type="image"
+            src={down}
+            alt=""
+            onClick={props.handleDown}
+            disabled={props.currentIndex >= props.storyLen - 1}
+          ></input>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default SplitPane;
