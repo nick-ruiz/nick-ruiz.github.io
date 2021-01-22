@@ -17,6 +17,7 @@ export class SplitPane extends Component {
       file: null,
       errors: { isEmpty: false, isNan: false },
       editable: false,
+      audio: true,
     };
     this.bell = new Audio(bell);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -29,6 +30,8 @@ export class SplitPane extends Component {
     this.handleDown = this.handleDown.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
+    this.handleAudio = this.handleAudio.bind(this);
+    this.handlePreview = this.handlePreview.bind(this);
   }
 
   componentWillUnmount() {
@@ -49,7 +52,7 @@ export class SplitPane extends Component {
   }
 
   handlePop() {
-    this.bell.play();
+    if (this.state.audio) this.bell.play();
     let index = this.state.currentIndex + 1;
     if (index > this.state.stories.length - 1) {
       clearInterval(this.timerID);
@@ -120,6 +123,7 @@ export class SplitPane extends Component {
   handleReset(e) {
     e.preventDefault();
     this.setState((state) => {
+      clearInterval(this.timerID);
       const ticking = false;
       const stories = [...state.stories];
       let current = { story: "Headline", time: 30 };
@@ -131,19 +135,22 @@ export class SplitPane extends Component {
         };
       }
       const currentIndex = 0;
-      return { ticking, stories, current, currentIndex };
+      const editable = false;
+      return { ticking, stories, current, currentIndex, editable };
     });
   }
 
   handleClear(e) {
     e.preventDefault();
-    this.setState({
-      ticking: false,
-      stories: [],
-      current: { story: "Headline", time: 30 },
-      currentIndex: 0,
-      file: null,
-      editable: false,
+    this.setState(() => {
+      clearInterval(this.timerID);
+      const ticking = false;
+      const stories = [];
+      const current = { story: "Headline", time: 30 };
+      const currentIndex = 0;
+      const file = null;
+      const editable = false;
+      return { ticking, stories, current, currentIndex, file, editable };
     });
   }
 
@@ -190,15 +197,33 @@ export class SplitPane extends Component {
 
   handleEdit(e) {
     e.preventDefault();
-    this.setState({
-      editable: !this.state.editable,
-      currentIndex: this.state.editable ? 0 : this.state.currentIndex,
-    });
+    console.log(this.state.currentIndex);
+    if (this.state.current.time < 0 && this.state.editable) {
+      this.handleReset(e);
+    } else {
+      this.setState({
+        editable: !this.state.editable,
+        currentIndex:
+          this.state.editable ||
+          this.state.currentIndex > this.state.stories.length - 1
+            ? 0
+            : this.state.currentIndex,
+      });
+    }
   }
 
   handleSelect(index, e) {
     e.preventDefault();
     this.setState({ currentIndex: index });
+  }
+
+  handleAudio(e) {
+    this.setState({ audio: e.target.checked });
+  }
+
+  handlePreview(e) {
+    e.preventDefault();
+    this.bell.play();
   }
 
   render() {
@@ -300,6 +325,19 @@ export class SplitPane extends Component {
                   <input className="Add" type="submit" value="Submit"></input>
                 </div>
               </form>
+              <div className="audio">
+                <label>Enable bell sound after timer reaches 0</label>
+                <input
+                  type="checkbox"
+                  checked={this.state.audio}
+                  onChange={this.handleAudio}
+                ></input>{" "}
+                <input
+                  type="submit"
+                  value="Preview Audio"
+                  onClick={this.handlePreview}
+                ></input>
+              </div>
             </div>
             <div className="options">
               <input
@@ -392,7 +430,7 @@ function EditDiv(props) {
           <input
             type="image"
             src={remove}
-            alt=""
+            alt="Delete"
             onClick={props.handleRemove}
           ></input>
         </div>
@@ -400,14 +438,14 @@ function EditDiv(props) {
           <input
             type="image"
             src={up}
-            alt=""
+            alt="Move Up"
             onClick={props.handleUp}
             disabled={props.currentIndex === 0}
           ></input>
           <input
             type="image"
             src={down}
-            alt=""
+            alt="Move Down"
             onClick={props.handleDown}
             disabled={props.currentIndex >= props.storyLen - 1}
           ></input>

@@ -304,3 +304,7 @@ input[type="image"]:disabled {
   opacity: 0.5;
   cursor: default;
 }
+
+.audio {
+  margin-top: 10px;
+}
