@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { v4 } from "uuid";
-import logo from "../resources/TwitchExtrudedWordmarkBlackOps.png";
+import defaultPic from "../resources/logo.jpg";
 import bell from "../resources/bell.mp3";
 import up from "../resources/up_arrow.png";
 import down from "../resources/down_arrow.png";
@@ -90,7 +90,7 @@ export class SplitPane extends Component {
       });
     } else {
       this.setState({
-        file: logo,
+        file: defaultPic,
       });
     }
   }
@@ -108,7 +108,12 @@ export class SplitPane extends Component {
         e.target.story.value = "";
         e.target.file.value = null;
         const current = stories[0];
-        return { stories, current, errors: { isNan: false, isEmpty: false } };
+        return {
+          stories,
+          current,
+          errors: { isNan: false, isEmpty: false },
+          file: defaultPic,
+        };
       });
     } else {
       this.setState(() => {
@@ -197,7 +202,6 @@ export class SplitPane extends Component {
 
   handleEdit(e) {
     e.preventDefault();
-    console.log(this.state.currentIndex);
     if (this.state.current.time < 0 && this.state.editable) {
       this.handleReset(e);
     } else {
@@ -381,7 +385,11 @@ export class SplitPane extends Component {
               <div className="storypic">
                 <img
                   alt=""
-                  src={this.state.current.file ? this.state.current.file : logo}
+                  src={
+                    this.state.current.file
+                      ? this.state.current.file
+                      : defaultPic
+                  }
                 ></img>
               </div>
               <div className="timer">
