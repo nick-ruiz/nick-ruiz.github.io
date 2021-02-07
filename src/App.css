@@ -47,7 +47,6 @@ PANEL CSS
   color: rgb(24, 17, 17);
   height: 100%;
   width: 25%;
-  right: 0;
 }
 
 .storypic {
@@ -74,6 +73,10 @@ PANEL CSS
   right: 0;
   width: 50%;
   height: 100%;
+}
+
+.edit-scroll {
+  overflow-y: auto;
 }
 
 .edit-buttons {
@@ -123,12 +126,23 @@ PANEL CSS
   margin-left: 5px;
 }
 
-.story,
-.selected,
-.faded,
-.editable {
-  font-size: 30px;
+.stories {
+  height: 70%;
+  font-size: 1.8rem;
   list-style-type: none;
+}
+
+.items {
+  height: 100%;
+}
+
+.stories li {
+  padding-left: 0.2rem;
+}
+
+.story-div {
+  height: 6.25%;
+  padding-left: 0.2rem;
 }
 
 .story {
@@ -185,16 +199,16 @@ DASHBOARD CSS
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 20vh;
+  height: 20%;
 }
 
 .title h1 {
-  font-size: 4em;
+  font-size: 4rem;
   font-weight: 700;
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
   margin: 0;
-  padding: 10px;
+  padding: 0;
   color: rgba(248, 248, 248, 0.705);
   outline: black;
   -webkit-text-stroke: 3px black;
@@ -226,7 +240,7 @@ DASHBOARD CSS
 
 label {
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 12px;
+  font-size: 0.9rem;
 }
 
 input[type="text"] {

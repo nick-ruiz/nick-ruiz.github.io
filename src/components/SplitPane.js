@@ -76,6 +76,7 @@ export class SplitPane extends Component {
     e.preventDefault();
     if (!this.state.ticking)
       this.timerID = setInterval(() => this.tick(), 1000);
+    else clearInterval(this.timerID);
     this.setState((state) => {
       const ticking = !state.ticking;
       return { ticking };
@@ -99,7 +100,7 @@ export class SplitPane extends Component {
     e.preventDefault();
     let x = e.target.story.value;
     let y = e.target.time.value;
-    if (Number.isInteger(y - 0) && x !== "") {
+    if (Number.isInteger(y - 0) && y !== "" && x !== "") {
       this.setState((state) => {
         const stories = [
           ...state.stories,
@@ -117,7 +118,7 @@ export class SplitPane extends Component {
       });
     } else {
       this.setState(() => {
-        const isNan = !Number.isInteger(y - 0);
+        const isNan = !Number.isInteger(y - 0) || y === "";
         const isEmpty = x === "";
         const errors = { isNan: isNan, isEmpty: isEmpty };
         return { errors };
@@ -235,7 +236,7 @@ export class SplitPane extends Component {
     if (this.state.stories.length === 0) {
       items.push(
         <li key={0} className="selected">
-          ADD HEADLINES
+          <StoryDiv text="ADD HEADLINES"></StoryDiv>
         </li>
       );
     } else if (this.state.editable) {
@@ -262,25 +263,33 @@ export class SplitPane extends Component {
         </li>
       );
     } else {
-      for (const [index, value] of this.state.stories.entries()) {
-        let diff = index - this.state.currentIndex;
-        if (index === this.state.currentIndex) {
+      const start = Math.floor(this.state.currentIndex / 16) * 16;
+      for (let i = start; i < this.state.stories.length; i++) {
+        const value = this.state.stories[i];
+        let diff = i - this.state.currentIndex;
+        if (i === this.state.currentIndex) {
           items.push(
-            <li className="selected" key={value.id}>
-              {value.story}
-            </li>
+            <StoryDiv
+              class="selected"
+              text={value.story}
+              key={value.id}
+            ></StoryDiv>
           );
         } else if (diff < 0) {
           items.push(
-            <li className="faded" key={value.id}>
-              {value.story}
-            </li>
+            <StoryDiv
+              class="faded"
+              text={value.story}
+              key={value.id}
+            ></StoryDiv>
           );
         } else {
           items.push(
-            <li className="story" key={value.id}>
-              {value.story}
-            </li>
+            <StoryDiv
+              class="story"
+              text={value.story}
+              key={value.id}
+            ></StoryDiv>
           );
         }
       }
@@ -410,7 +419,13 @@ export class SplitPane extends Component {
                   <></>
                 )}
               </div>
-              <div>{items}</div>
+              <div
+                className={
+                  this.state.editable ? "stories edit-scroll" : "stories"
+                }
+              >
+                <div className="items">{items}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -461,6 +476,10 @@ function EditDiv(props) {
       </div>
     </div>
   );
+}
+
+function StoryDiv(props) {
+  return <div className={props.class + " story-div"}>{props.text}</div>;
 }
 
 export default SplitPane;
